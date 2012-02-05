@@ -1,6 +1,71 @@
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
+" Easy buffer navigation
+noremap <C-h>  <C-w>h
+noremap <C-j>  <C-w>j
+noremap <C-k>  <C-w>k
+noremap <C-l>  <C-w>l
+noremap <leader>v <C-w>v
+
+" Leader
+let mapleader = ","
+
+" hitting d will duplicate whatever's selected directly below
+vmap D y'>p
+
+" Softtabs, 2 spaces
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set wrap
+set textwidth=80
+set formatoptions=qrn1
+
+" Always display the status line
+set laststatus=2
+
+" Numbers
+set number
+set numberwidth=5
+
+set ignorecase      " Don't care about case...
+set smartcase   " ... unless the query contains upper case characters
+set autoindent    " Enable automatic indenting for files with ft set
+set nosmartindent
+set nocindent
+
+set showcmd   " Show command in statusline as it's being typed
+set showmatch   " Jump to matching bracket
+set ruler   " Show row,col %progress through file
+set laststatus=0  " Dont't show statusline (2 is always)
+set hidden        " Move between buffers without writing them.  Don't :q! or :qa! frivolously!"
+
+" TREAT <LI> AND <P> TAGS LIKE THE BLOCK TAGS THEY ARE
+let g:html_indent_tags = 'li\|p'
+
+" Maps autocomplete to tab
+imap <Tab> <C-P>
+
+" Keep search matches in the middle of the window and pulse the line when moving
+" to them.
+nnoremap n nzzzv
+nnoremap N Nzzzv
+
+" Toggle Nerdtree
+nnoremap X :NERDTreeToggle<CR>
+
+
+" Make sure Vim returns to the same line when you reopen a file.
+" Thanks, Amit
+augroup line_return
+    au!
+    au BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
+augroup END"`'>"'")
+
 "DISABLE ARROW KEYS
 function! DelEmptyLineAbove()
     if line(".") == 1
