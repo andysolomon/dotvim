@@ -59,7 +59,7 @@ let mapleader = ","
 " hitting d will duplicate whatever's selected directly below
 vmap D y'>p
 
-colorscheme Molokai2 
+colorscheme zellner 
 set background=light " or dark
 set t_Co=256
 
