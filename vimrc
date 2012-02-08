@@ -16,7 +16,9 @@ Bundle 'gmarik/vundle'
 " Bundle 'tpope/vim-fugitive'
 " Bundle 'lokaltog/vim-easymotion'
 " Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
-Bundle 'vim-scripts/taglist' 
+Bundle 'scrooloose/syntastic'
+Bundle 'scrooloose/nerdtree'
+Bundle 'mr-szymanski/prefixr'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'fholgado/Molokai2'
 Bundle 'vim-scripts/YankRing.vim'
@@ -28,9 +30,9 @@ Bundle 'bkad/CamelCaseMotion'
 Bundle 'vim-scripts/ZoomWin'
 Bundle 'nelstrom/vim-textobj-rubyblock'
 " " vim-scripts repos
-" Bundle 'L9'
-" Bundle 'FuzzyFinder'
-" Bundle 'rails.vim'
+Bundle 'L9'
+Bundle 'FuzzyFinder'
+Bundle 'rails.vim'
 " " non github repos
 " Bundle 'git://git.wincent.com/command-t.git'
 
@@ -222,21 +224,22 @@ set wrap linebreak nolist
 set formatoptions=qrn1
 
 " When pressing <leader>cd switch to the directory of the open buffer
- map <leader>cd :cd %:p:h<cr>
+map <leader>cd :cd %:p:h<cr>
 
 " " Custom maps to set working directories quickly
 " " At Work
- map <leader>p1 :cd /Applications/XAMPP/htdocs/<cr>
+map <leader>p1 :cd /Applications/XAMPP/htdocs/<cr>
 
 command! Bclose call <SID>BufcloseCloseIt()
- function! <SID>BufcloseCloseIt()
-    let l:currentBufNum = bufnr("%")
-       let l:alternateBufNum = bufnr("#")
+
+function! <SID>BufcloseCloseIt()
+ let l:currentBufNum = bufnr("%")
+ let l:alternateBufNum = bufnr("#")
 
 if buflisted(l:alternateBufNum)
- buffer #
+  buffer #
 else
- bnext
+  bnext
 endif
 
 if bufnr("%") == l:currentBufNum
@@ -259,7 +262,10 @@ function! s:align()
                               endif
                             endfunction
 
-
+" Visual
+if has("virtualedit")
+ set virtualedit+=block
+endif
 
 " Toggle Nerdtree
 nnoremap X :NERDTreeToggle<CR>
