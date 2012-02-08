@@ -64,7 +64,7 @@ inoremap jj <Esc>
 " hitting d will duplicate whatever's selected directly below
 vmap D y'>p
 
-colorscheme zellner 
+colorscheme molokai2 
 set background=light " or dark
 set t_Co=256
 
