@@ -56,6 +56,9 @@ noremap <leader>v <C-w>v
 " Leader
 let mapleader = ","
 
+" Remap jj to esc in insert mode
+inoremap jj <Esc>
+
 " hitting d will duplicate whatever's selected directly below
 vmap D y'>p
 
@@ -65,11 +68,22 @@ set t_Co=256
 
 """" Command Line
 set history=1000            " Keep a very long command-line history.
-set wildmenu                " Menu completion in command mode on <Tab>
-set wildmode=full           " <Tab> cycles between all matching choices.
 set wcm=<C-Z>               " Ctrl-Z in a mapping acts like <Tab> on cmdline
 source $VIMRUNTIME/menu.vim " Load menus (this would be done anyway in gvim)
 " <F4> triggers the menus, even in terminal vim.
+
+" Wildmenu
+if has("wildmenu")
+  set wildignore+=*.a,*.o
+  set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
+  set wildignore+=.DS_Store,.git,.hg,.svn
+  set wildignore+=*~,*.swp,*.tmp
+  set wildmenu
+  set wildmode=longest,list
+endif
+
+" remap Ctrl+X Ctrl+F to Tab for file completion in insertmode
+inoremap <Tab> <C-X><C-F>
 
 " Softtabs, 2 spaces
 set tabstop=2
@@ -163,10 +177,17 @@ nnoremap n nzzzv
 nnoremap N Nzzzv
 
 " Switch buffers with L and H easily
-map L :bn<cr>
-map H :bp<cr>
+map <C-L> :bn<cr>
+map <C-H> :bp<cr>
+map H ^
+map L $
 
 set ignorecase "Ignore case when searching
+
+nnoremap <leader>i :set incsearch!<CR>
+nnoremap <leader>h :set hlsearch!<CR>
+autocmd InsertEnter * :setlocal nohlsearch
+autocmd InsertLeave * :setlocal hlsearch
 
 set hlsearch "Highlight search things
 
@@ -242,6 +263,12 @@ function! s:align()
 
 " Toggle Nerdtree
 nnoremap X :NERDTreeToggle<CR>
+
+" automatic persitent undo across sessions on any file
+if has("persistent_undo")
+  set undodir=~/.vim/undodir
+  set undofile
+endif
 
 nnoremap <F5> :GundoToggle<CR>
 
