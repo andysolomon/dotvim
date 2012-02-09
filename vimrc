@@ -16,6 +16,9 @@ Bundle 'gmarik/vundle'
 " Bundle 'tpope/vim-fugitive'
 " Bundle 'lokaltog/vim-easymotion'
 " Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'tpope/vim-endwise'
+Bundle 'sjl/gundo'
+Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
 Bundle 'mr-szymanski/prefixr'
@@ -64,7 +67,7 @@ inoremap jj <Esc>
 " hitting d will duplicate whatever's selected directly below
 vmap D y'>p
 
-colorscheme zellner 
+colorscheme molokai2 
 set background=light " or dark
 set t_Co=256
 
@@ -87,6 +90,13 @@ endif
 " remap Ctrl+X Ctrl+F to Tab for file completion in insertmode
 inoremap <Tab> <C-X><C-F>
 
+" Wrapped lines goes down/up to next row, rather than next line in file.
+nnoremap j gj
+nnoremap k gk
+
+" Yank from the cursor to the end of the line, to be consistent with C and D.
+noremap Y y$
+
 " Softtabs, 2 spaces
 set tabstop=2
 set shiftwidth=2
@@ -94,6 +104,7 @@ set expandtab
 set wrap
 set textwidth=80
 set formatoptions=qrn1
+set nowrap
 
 set foldmethod=indent
 set foldlevel=99
@@ -139,6 +150,15 @@ set hidden        " Move between buffers without writing them.  Don't :q! or :qa
 set nobackup
 set nowb
 set noswapfile
+
+" Fuzzy Finder {
+" Fuzzy Find file, tree, buffer, line
+nmap <leader>ff :FufFile **/<CR>
+nmap <leader>ft :FufFile<CR>
+nmap <leader>fb :FufBuffer<CR>
+nmap <leader>fl :FufLine<CR>
+nmap <leader>fr :FufRenewCache<CR>
+" }
 
 
 " TREAT <LI> AND <P> TAGS LIKE THE BLOCK TAGS THEY ARE
