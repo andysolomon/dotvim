@@ -16,6 +16,7 @@ Bundle 'gmarik/vundle'
 " Bundle 'tpope/vim-fugitive'
 " Bundle 'lokaltog/vim-easymotion'
 " Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
+Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'tpope/vim-endwise'
 Bundle 'sjl/gundo'
 Bundle 'Raimondi/delimitMate'
@@ -25,7 +26,7 @@ Bundle 'mr-szymanski/prefixr'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'fholgado/Molokai2'
 Bundle 'vim-scripts/YankRing.vim'
-Bundle 'altercation/vim-colors-solarized'
+" Bundle 'altercation/vim-colors-solarized'
 Bundle 'tsaleh/vim-matchit'
 Bundle 'groenewege/vim-less'
 Bundle 'mileszs/ack.vim'
@@ -38,6 +39,9 @@ Bundle 'FuzzyFinder'
 Bundle 'rails.vim'
 " " non github repos
 " Bundle 'git://git.wincent.com/command-t.git'
+
+" Search for the file in all paths 
+:set path=.,~/src/**,/usr/include,,
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -71,6 +75,8 @@ colorscheme molokai2
 set background=light " or dark
 set t_Co=256
 
+set colorcolumn=+1
+
 """" Command Line
 set history=1000            " Keep a very long command-line history.
 set wcm=<C-Z>               " Ctrl-Z in a mapping acts like <Tab> on cmdline
@@ -79,8 +85,8 @@ source $VIMRUNTIME/menu.vim " Load menus (this would be done anyway in gvim)
 
 " Wildmenu
 if has("wildmenu")
-  set wildignore+=*.a,*.o
-  set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png
+  set wildignore+=*.a,*.o,*.obj,*.exe,*.dll,*.manifest
+  set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.jpeg
   set wildignore+=.DS_Store,.git,.hg,.svn
   set wildignore+=*~,*.swp,*.tmp
   set wildmenu
@@ -143,13 +149,50 @@ set showcmd   " Show command in statusline as it's being typed
 set showmatch   " Jump to matching bracket
 set ruler   " Show row,col %progress through file
 set laststatus=0  " Dont't show statusline (2 is always)
-set hidden        " Move between buffers without writing them.  Don't :q! or :qa! frivolously!"
+set hidden  " Move between buffers without writing them.  Don't :q! or :qa! frivolously!"
+
+set virtualedit=all
+
+" Abbreviations ----------------------------------------------------------- {{{
+
+function! EatChar(pat)
+ let c = nr2char(getchar(0))
+  return (c =~ a:pat) ? '' : c
+endfunction
+
+function! MakeSpacelessIabbrev(from, to)
+ execute "iabbrev <silent> ".a:from." ".a:to."<C-R>=EatChar('\\s')<CR>"
+endfunction
+
+call MakeSpacelessIabbrev('sl/',  'http://stevelosh.com/')
+call MakeSpacelessIabbrev('bb/',  'http://bitbucket.org/')
+call MakeSpacelessIabbrev('bbs/', 'http://bitbucket.org/sjl/')
+call MakeSpacelessIabbrev('gh/',  'http://github.com/')
+call MakeSpacelessIabbrev('gha/', 'http://github.com/andysolomon/')
+
+iabbrev ldis ಠ_ಠ
+iabbrev lsad ಥ_ಥ
+iabbrev lhap ಥ‿ಥ
+
+iabbrev sl@ steve@stevelosh.com
+iabbrev vrcf `~/.vimrc` file
 
 "  Files, backups and undo
 " " Turn backup off, since most stuff is in SVN, git anyway...
 set nobackup
 set nowb
 set noswapfile
+
+" Resize splits when the window is resized
+au VimResized * :wincmd =
+
+" Trailing whitespace {{{
+" " Only shown when not in insert mode so I don't go insane.
+augroup trailing
+  au!
+  au InsertEnter * :set listchars-=trail:⌴
+  au InsertLeave * :set listchars+=trail:⌴
+augroup END
 
 " Fuzzy Finder {
 " Fuzzy Find file, tree, buffer, line
@@ -202,7 +245,7 @@ nnoremap N Nzzzv
 map <C-L> :bn<cr>
 map <C-H> :bp<cr>
 map H ^
-map L $
+map L g_
 
 set ignorecase "Ignore case when searching
 
@@ -252,48 +295,223 @@ map <leader>p1 :cd /Applications/XAMPP/htdocs/<cr>
 
 command! Bclose call <SID>BufcloseCloseIt()
 
+" CSS and LessCSS {{{
+augroup ft_css
+ au!
+ au BufNewFile,BufRead *.less setlocal filetype=less
+
+ au Filetype less,css setlocal foldmethod=marker
+ au Filetype less,css setlocal foldmarker={,}
+ au Filetype less,css setlocal omnifunc=csscomplete#CompleteCSS
+ au Filetype less,css setlocal iskeyword+=-
+
+" Use <leader>S to sort properties.  Turns this:
+"
+"     p {
+"         width: 200px;
+"         height: 100px;
+"         background: red;
+"
+"         ...
+"     }
+"
+" into this:
+
+"     p {
+"         background: red;
+"         height: 100px;
+"         width: 200px;
+"
+"         ...
+"     }
+au BufNewFile,BufRead *.less,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
+" Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
+" positioned inside of them AND the following code doesn't get unfolded.
+au BufNewFile,BufRead *.less,*.css inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
+augroup END
+
+" Javascript {{{
+augroup ft_javascript
+  au!
+
+  au FileType javascript setlocal foldmethod=marker
+  au FileType javascript setlocal foldmarker={,}
+
+  " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
+  " positioned inside of them AND the following code doesn't get unfolded.
+  au Filetype javascript inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
+augroup END
+
+" Ruby {{{
+augroup ft_ruby
+  au!
+  au Filetype ruby setlocal foldmethod=syntax
+augroup END
+
+" Vim {{{
+augroup ft_vim
+  au!
+
+  au FileType vim setlocal foldmethod=marker
+  au FileType help setlocal textwidth=78
+  au BufWinEnter *.txt if &ft == 'help' | wincmd L | endif
+augroup END
+
+" Pulse ------------------------------------------------------------------- {{{
+function! PulseCursorLine()
+let current_window = winnr()
+
+windo set nocursorline
+execute current_window . 'wincmd w'
+
+setlocal cursorline
+
+redir => old_hi
+silent execute 'hi CursorLine'
+redir END
+let old_hi = split(old_hi, '\n')[0]
+let old_hi = substitute(old_hi, 'xxx', '', '')
+
+hi CursorLine guibg=#2a2a2a
+redraw
+sleep 20m
+
+hi CursorLine guibg=#333333
+redraw
+sleep 20m
+
+hi CursorLine guibg=#3a3a3a
+redraw
+sleep 20m
+
+hi CursorLine guibg=#444444
+redraw
+sleep 20m
+
+hi CursorLine guibg=#4a4a4a
+redraw
+sleep 20m
+
+hi CursorLine guibg=#444444
+redraw
+sleep 20m
+
+hi CursorLine guibg=#3a3a3a
+redraw
+sleep 20m
+
+hi CursorLine guibg=#333333
+redraw
+sleep 20m
+
+hi CursorLine guibg=#2a2a2a
+redraw
+sleep 20m
+
+execute 'hi ' . old_hi
+
+windo set cursorline
+execute current_window . 'wincmd w'
+endfunction
+" }}}}
+
+" Rainbox Parentheses {{{
+nnoremap <leader>R :RainbowParenthesesToggle<cr>
+let g:rbpt_colorpairs = [
+\ ['brown',       'RoyalBlue3'],
+\ ['Darkblue',    'SeaGreen3'],
+\ ['darkgray',    'DarkOrchid3'],
+\ ['darkgreen',   'firebrick3'],
+\ ['darkcyan',    'RoyalBlue3'],
+\ ['darkred',     'SeaGreen3'],
+\ ['darkmagenta', 'DarkOrchid3'],
+\ ['brown',       'firebrick3'],
+\ ['gray',        'RoyalBlue3'],
+\ ['black',       'SeaGreen3'],
+\ ['darkmagenta', 'DarkOrchid3'],
+\ ['Darkblue', 'firebrick3'],
+\ ['darkgreen', 'RoyalBlue3'],
+\ ['darkcyan', 'SeaGreen3'],
+\ ['darkred', 'DarkOrchid3'],
+\ ['red', 'firebrick3'],
+\ ]
+let g:rbpt_max = 16
+" }}}}
+
+" Block Colors {{{
+let g:blockcolor_state = 0
+function! BlockColor() " {{{
+if g:blockcolor_state
+let g:blockcolor_state = 0
+call matchdelete(77880)
+call matchdelete(77881)
+call matchdelete(77882)
+call matchdelete(77883)
+else
+let g:blockcolor_state = 1
+call matchadd("BlockColor1", '^ \{4}.*', 1, 77880)
+call matchadd("BlockColor2", '^ \{8}.*', 2, 77881)
+call matchadd("BlockColor3", '^ \{12}.*', 3, 77882)
+call matchadd("BlockColor4", '^ \{16}.*', 4, 77883)
+endif
+endfunction " }}}
+nnoremap <leader>B :call BlockColor()<cr>
+" }}}}
+
+function! MyFoldText() " {{{
+let line = getline(v:foldstart)
+    
+let nucolwidth = &fdc + &number * &numberwidth
+let windowwidth = winwidth(0) - nucolwidth - 3
+let foldedlinecount = v:foldend - v:foldstart
+" expand tabs into spaces
+let onetab = strpart('          ', 0, &tabstop)
+let line = substitute(line, '\t', onetab, 'g')
+                    
+let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
+endfunction " }}}
+set foldtext=MyFoldText()}"
+
 function! <SID>BufcloseCloseIt()
- let l:currentBufNum = bufnr("%")
- let l:alternateBufNum = bufnr("#")
+let l:currentBufNum = bufnr("%")
+let l:alternateBufNum = bufnr("#")
 
 if buflisted(l:alternateBufNum)
-  buffer #
+buffer #
 else
-  bnext
+bnext
 endif
 
 if bufnr("%") == l:currentBufNum
-  new
+new
 endif
 if buflisted(l:currentBufNum)
-  execute("bdelete!".l:currentBufNum)
+execute("bdelete!".l:currentBufNum)
 endif
 endfunction
 
- 
-function! s:align()
-    let p = '^\s*|\s.*\s|\s*$'
-      if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
-            let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
-                let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
-                    Tabularize/|/l1
-                        normal! 0
-                            call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
-                              endif
-                            endfunction
 
-" Visual
-if has("virtualedit")
- set virtualedit+=block
-endif
+function! s:align()
+  let p = '^\s*|\s.*\s|\s*$'
+    if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+          let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+              let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+                  Tabularize/|/l1
+                      normal! 0
+                          call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+                            endif
+                          endfunction
+
 
 " Toggle Nerdtree
 nnoremap X :NERDTreeToggle<CR>
 
 " automatic persitent undo across sessions on any file
 if has("persistent_undo")
-  set undodir=~/.vim/undodir
-  set undofile
+set undodir=~/.vim/undodir
+set undofile
 endif
 
 nnoremap <F5> :GundoToggle<CR>
@@ -332,13 +550,13 @@ set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{CurDir()}%h\ \ \ Line:\ 
 
 function! CurDir()
 let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
-  return curdir
+return curdir
 endfunction
 
 function! HasPaste()
-  if &paste
-    return 'PASTE MODE  '
-  else
+if &paste
+  return 'PASTE MODE  '
+else
     return ''
   endif
 endfunction
