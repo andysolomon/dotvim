@@ -106,14 +106,18 @@ noremap Y y$
 " Softtabs, 2 spaces
 set tabstop=2
 set shiftwidth=2
+set softtabstop=2
 set expandtab
 set wrap
 set textwidth=80
 set formatoptions=qrn1
 set nowrap
-
+set title
+set encoding=utf-8
+set scrolloff=3
 set foldmethod=indent
 set foldlevel=99
+set modelines=0
 
 " Always display the status line
 set laststatus=2
@@ -142,16 +146,20 @@ set shortmess=atI " Shortens messages
 set ignorecase      " Don't care about case...
 set smartcase   " ... unless the query contains upper case characters
 set autoindent    " Enable automatic indenting for files with ft set
-set nosmartindent
-set nocindent
+set smartindent
 
+set ttyfast
+set showmode
 set showcmd   " Show command in statusline as it's being typed
-set showmatch   " Jump to matching bracket
 set ruler   " Show row,col %progress through file
 set laststatus=0  " Dont't show statusline (2 is always)
 set hidden  " Move between buffers without writing them.  Don't :q! or :qa! frivolously!"
+set backspace=indent,eol,start
 
 set virtualedit=all
+
+" Splits  ,v to open a new vertical split and switch to it
+nnoremap <leader>v <C-w>v<C-w>l
 
 " Abbreviations ----------------------------------------------------------- {{{
 
@@ -225,6 +233,12 @@ map <c-space> ?
 map <silent> <leader><cr> :noh<cr>
 
 map <leader>n :NERDTreeToggle<CR>
+let NERDTreeShowBookmarks = 1
+let NERDChristmasTree = 1
+let NERDTreeWinPos = "left"
+let NERDTreeHijackNetrw = 1
+let NERDTreeQuitOnOpen = 1
+let NERDTreeWinSize = 50
 
 " Close the current buffer
 map <leader>bd :Bclose<cr>
@@ -505,8 +519,6 @@ function! s:align()
                           endfunction
 
 
-" Toggle Nerdtree
-nnoremap X :NERDTreeToggle<CR>
 
 " automatic persitent undo across sessions on any file
 if has("persistent_undo")
@@ -546,8 +558,23 @@ autocmd BufRead,BufNew :call UMiniBufExplorer
 map <leader>u :TMiniBufExplorer<cr>
 
 " Format the statusline
-set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{CurDir()}%h\ \ \ Line:\ %l/%L:%ch
-
+set statusline=%F%m%r%h%w[%L]%y[%p%%][%04v]
+"              | | | | |  |   |      |  |
+"              | | | | |  |   |      |  |
+"              | | | | |  |   |      |  |
+"              | | | | |  |   |      |  |
+"              | | | | |  |   |      |  +-- current % into file
+"              | | | | |  |   |      +-- current syntax in
+"              | | | | |  |   |          square brackets
+"              | | | | |  |   +-- current fileformat
+"              | | | | |  +-- number of lines
+"              | | | | +-- preview flag in square brackets
+"              | | | +-- help flag in square brackets
+"              | | +-- readonly flag in square brackets
+"              | +-- rodified flag in square brackets
+"              +-- full path to file in the rbuffer
+"}
+              
 function! CurDir()
 let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
 return curdir
