@@ -1,6 +1,10 @@
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
+colorscheme mrkn256
+set background=dark " or dark
+set t_Co=256
+
 set nocompatible
 filetype off  " required!
 
@@ -19,6 +23,9 @@ Bundle 'gmarik/vundle'
 Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'tpope/vim-endwise'
 Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-vividchalk'
+Bundle 'tpope/vim-rails'
+Bundle 'flazz/vim-colorschemes'
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'snipmate-snippets'
@@ -27,9 +34,9 @@ Bundle 'sjl/gundo'
 Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
-Bundle 'mr-szymanski/prefixr'
+" Bundle 'mr-szymanski/prefixr'
 Bundle 'kchmck/vim-coffee-script'
-Bundle 'fholgado/Molokai2'
+" Bundle 'fholgado/Molokai2'
 Bundle 'vim-scripts/YankRing.vim'
 " Bundle 'altercation/vim-colors-solarized'
 Bundle 'tsaleh/vim-matchit'
@@ -74,11 +81,6 @@ inoremap jj <Esc>
 
 " hitting d will duplicate whatever's selected directly below
 vmap D y'>p
-
-colorscheme molokai2 
-set background=light " or dark
-set t_Co=256
-
 
 set colorcolumn=+1
 
