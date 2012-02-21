@@ -1,6 +1,10 @@
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
+colorscheme mrkn256
+set background=dark " or dark
+set t_Co=256
+
 set nocompatible
 filetype off  " required!
 
@@ -18,13 +22,21 @@ Bundle 'gmarik/vundle'
 " Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'tpope/vim-endwise'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-vividchalk'
+Bundle 'tpope/vim-rails'
+Bundle 'flazz/vim-colorschemes'
+Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'tomtom/tlib_vim'
+Bundle 'snipmate-snippets'
+Bundle "garbas/vim-snipmate"
 Bundle 'sjl/gundo'
 Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
-Bundle 'mr-szymanski/prefixr'
+" Bundle 'mr-szymanski/prefixr'
 Bundle 'kchmck/vim-coffee-script'
-Bundle 'fholgado/Molokai2'
+" Bundle 'fholgado/Molokai2'
 Bundle 'vim-scripts/YankRing.vim'
 " Bundle 'altercation/vim-colors-solarized'
 Bundle 'tsaleh/vim-matchit'
@@ -32,7 +44,6 @@ Bundle 'groenewege/vim-less'
 Bundle 'mileszs/ack.vim'
 Bundle 'bkad/CamelCaseMotion'
 Bundle 'vim-scripts/ZoomWin'
-Bundle 'nelstrom/vim-textobj-rubyblock'
 " " vim-scripts repos
 Bundle 'L9'
 Bundle 'FuzzyFinder'
@@ -70,10 +81,6 @@ inoremap jj <Esc>
 
 " hitting d will duplicate whatever's selected directly below
 vmap D y'>p
-
-colorscheme molokai2 
-set background=light " or dark
-set t_Co=256
 
 set colorcolumn=+1
 
@@ -164,12 +171,12 @@ nnoremap <leader>v <C-w>v<C-w>l
 " Abbreviations ----------------------------------------------------------- {{{
 
 function! EatChar(pat)
- let c = nr2char(getchar(0))
+  let c = nr2char(getchar(0))
   return (c =~ a:pat) ? '' : c
 endfunction
 
 function! MakeSpacelessIabbrev(from, to)
- execute "iabbrev <silent> ".a:from." ".a:to."<C-R>=EatChar('\\s')<CR>"
+  execute "iabbrev <silent> ".a:from." ".a:to."<C-R>=EatChar('\\s')<CR>"
 endfunction
 
 call MakeSpacelessIabbrev('sl/',  'http://stevelosh.com/')
@@ -278,10 +285,10 @@ set showmatch "Show matching bracets when text indicator is over them
 set mat=2 "How many tenths of a second to blink
 
 if exists(":Tabularize")
- nmap <Leader>a= :Tabularize /=<CR>
- vmap <Leader>a= :Tabularize /=<CR>
- nmap <Leader>a: :Tabularize /:\zs<CR>
- vmap <Leader>a: :Tabularize /:\zs<CR>
+  nmap <Leader>a= :Tabularize /=<CR>
+  vmap <Leader>a= :Tabularize /=<CR>
+  nmap <Leader>a: :Tabularize /:\zs<CR>
+  vmap <Leader>a: :Tabularize /:\zs<CR>
 endif
 
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
@@ -311,37 +318,37 @@ command! Bclose call <SID>BufcloseCloseIt()
 
 " CSS and LessCSS {{{
 augroup ft_css
- au!
- au BufNewFile,BufRead *.less setlocal filetype=less
+  au!
+  au BufNewFile,BufRead *.less setlocal filetype=less
 
- au Filetype less,css setlocal foldmethod=marker
- au Filetype less,css setlocal foldmarker={,}
- au Filetype less,css setlocal omnifunc=csscomplete#CompleteCSS
- au Filetype less,css setlocal iskeyword+=-
+  au Filetype less,css setlocal foldmethod=marker
+  au Filetype less,css setlocal foldmarker={,}
+  au Filetype less,css setlocal omnifunc=csscomplete#CompleteCSS
+  au Filetype less,css setlocal iskeyword+=-
 
-" Use <leader>S to sort properties.  Turns this:
-"
-"     p {
-"         width: 200px;
-"         height: 100px;
-"         background: red;
-"
-"         ...
-"     }
-"
-" into this:
+  " Use <leader>S to sort properties.  Turns this:
+  "
+  "     p {
+  "         width: 200px;
+  "         height: 100px;
+  "         background: red;
+  "
+  "         ...
+  "     }
+  "
+  " into this:
 
-"     p {
-"         background: red;
-"         height: 100px;
-"         width: 200px;
-"
-"         ...
-"     }
-au BufNewFile,BufRead *.less,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
-" Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
-" positioned inside of them AND the following code doesn't get unfolded.
-au BufNewFile,BufRead *.less,*.css inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
+  "     p {
+  "         background: red;
+  "         height: 100px;
+  "         width: 200px;
+  "
+  "         ...
+  "     }
+  au BufNewFile,BufRead *.less,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
+  " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
+  " positioned inside of them AND the following code doesn't get unfolded.
+  au BufNewFile,BufRead *.less,*.css inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
 augroup END
 
 " Javascript {{{
@@ -373,157 +380,157 @@ augroup END
 
 " Pulse ------------------------------------------------------------------- {{{
 function! PulseCursorLine()
-let current_window = winnr()
+  let current_window = winnr()
 
-windo set nocursorline
-execute current_window . 'wincmd w'
+  windo set nocursorline
+  execute current_window . 'wincmd w'
 
-setlocal cursorline
+  setlocal cursorline
 
-redir => old_hi
-silent execute 'hi CursorLine'
-redir END
-let old_hi = split(old_hi, '\n')[0]
-let old_hi = substitute(old_hi, 'xxx', '', '')
+  redir => old_hi
+  silent execute 'hi CursorLine'
+  redir END
+  let old_hi = split(old_hi, '\n')[0]
+  let old_hi = substitute(old_hi, 'xxx', '', '')
 
-hi CursorLine guibg=#2a2a2a
-redraw
-sleep 20m
+  hi CursorLine guibg=#2a2a2a
+  redraw
+  sleep 20m
 
-hi CursorLine guibg=#333333
-redraw
-sleep 20m
+  hi CursorLine guibg=#333333
+  redraw
+  sleep 20m
 
-hi CursorLine guibg=#3a3a3a
-redraw
-sleep 20m
+  hi CursorLine guibg=#3a3a3a
+  redraw
+  sleep 20m
 
-hi CursorLine guibg=#444444
-redraw
-sleep 20m
+  hi CursorLine guibg=#444444
+  redraw
+  sleep 20m
 
-hi CursorLine guibg=#4a4a4a
-redraw
-sleep 20m
+  hi CursorLine guibg=#4a4a4a
+  redraw
+  sleep 20m
 
-hi CursorLine guibg=#444444
-redraw
-sleep 20m
+  hi CursorLine guibg=#444444
+  redraw
+  sleep 20m
 
-hi CursorLine guibg=#3a3a3a
-redraw
-sleep 20m
+  hi CursorLine guibg=#3a3a3a
+  redraw
+  sleep 20m
 
-hi CursorLine guibg=#333333
-redraw
-sleep 20m
+  hi CursorLine guibg=#333333
+  redraw
+  sleep 20m
 
-hi CursorLine guibg=#2a2a2a
-redraw
-sleep 20m
+  hi CursorLine guibg=#2a2a2a
+  redraw
+  sleep 20m
 
-execute 'hi ' . old_hi
+  execute 'hi ' . old_hi
 
-windo set cursorline
-execute current_window . 'wincmd w'
+  windo set cursorline
+  execute current_window . 'wincmd w'
 endfunction
 " }}}}
 
 " Rainbox Parentheses {{{
 nnoremap <leader>R :RainbowParenthesesToggle<cr>
 let g:rbpt_colorpairs = [
-\ ['brown',       'RoyalBlue3'],
-\ ['Darkblue',    'SeaGreen3'],
-\ ['darkgray',    'DarkOrchid3'],
-\ ['darkgreen',   'firebrick3'],
-\ ['darkcyan',    'RoyalBlue3'],
-\ ['darkred',     'SeaGreen3'],
-\ ['darkmagenta', 'DarkOrchid3'],
-\ ['brown',       'firebrick3'],
-\ ['gray',        'RoyalBlue3'],
-\ ['black',       'SeaGreen3'],
-\ ['darkmagenta', 'DarkOrchid3'],
-\ ['Darkblue', 'firebrick3'],
-\ ['darkgreen', 'RoyalBlue3'],
-\ ['darkcyan', 'SeaGreen3'],
-\ ['darkred', 'DarkOrchid3'],
-\ ['red', 'firebrick3'],
-\ ]
+      \ ['brown',       'RoyalBlue3'],
+      \ ['Darkblue',    'SeaGreen3'],
+      \ ['darkgray',    'DarkOrchid3'],
+      \ ['darkgreen',   'firebrick3'],
+      \ ['darkcyan',    'RoyalBlue3'],
+      \ ['darkred',     'SeaGreen3'],
+      \ ['darkmagenta', 'DarkOrchid3'],
+      \ ['brown',       'firebrick3'],
+      \ ['gray',        'RoyalBlue3'],
+      \ ['black',       'SeaGreen3'],
+      \ ['darkmagenta', 'DarkOrchid3'],
+      \ ['Darkblue', 'firebrick3'],
+      \ ['darkgreen', 'RoyalBlue3'],
+      \ ['darkcyan', 'SeaGreen3'],
+      \ ['darkred', 'DarkOrchid3'],
+      \ ['red', 'firebrick3'],
+      \ ]
 let g:rbpt_max = 16
 " }}}}
 
 " Block Colors {{{
 let g:blockcolor_state = 0
 function! BlockColor() " {{{
-if g:blockcolor_state
-let g:blockcolor_state = 0
-call matchdelete(77880)
-call matchdelete(77881)
-call matchdelete(77882)
-call matchdelete(77883)
-else
-let g:blockcolor_state = 1
-call matchadd("BlockColor1", '^ \{4}.*', 1, 77880)
-call matchadd("BlockColor2", '^ \{8}.*', 2, 77881)
-call matchadd("BlockColor3", '^ \{12}.*', 3, 77882)
-call matchadd("BlockColor4", '^ \{16}.*', 4, 77883)
-endif
+  if g:blockcolor_state
+    let g:blockcolor_state = 0
+    call matchdelete(77880)
+    call matchdelete(77881)
+    call matchdelete(77882)
+    call matchdelete(77883)
+  else
+    let g:blockcolor_state = 1
+    call matchadd("BlockColor1", '^ \{4}.*', 1, 77880)
+    call matchadd("BlockColor2", '^ \{8}.*', 2, 77881)
+    call matchadd("BlockColor3", '^ \{12}.*', 3, 77882)
+    call matchadd("BlockColor4", '^ \{16}.*', 4, 77883)
+  endif
 endfunction " }}}
 nnoremap <leader>B :call BlockColor()<cr>
 " }}}}
 
 function! MyFoldText() " {{{
-let line = getline(v:foldstart)
-    
-let nucolwidth = &fdc + &number * &numberwidth
-let windowwidth = winwidth(0) - nucolwidth - 3
-let foldedlinecount = v:foldend - v:foldstart
-" expand tabs into spaces
-let onetab = strpart('          ', 0, &tabstop)
-let line = substitute(line, '\t', onetab, 'g')
-                    
-let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
+  let line = getline(v:foldstart)
+
+  let nucolwidth = &fdc + &number * &numberwidth
+  let windowwidth = winwidth(0) - nucolwidth - 3
+  let foldedlinecount = v:foldend - v:foldstart
+  " expand tabs into spaces
+  let onetab = strpart('          ', 0, &tabstop)
+  let line = substitute(line, '\t', onetab, 'g')
+
+  let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
+  let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
+  return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
 endfunction " }}}
 set foldtext=MyFoldText()}"
 
 function! <SID>BufcloseCloseIt()
-let l:currentBufNum = bufnr("%")
-let l:alternateBufNum = bufnr("#")
+  let l:currentBufNum = bufnr("%")
+  let l:alternateBufNum = bufnr("#")
 
-if buflisted(l:alternateBufNum)
-buffer #
-else
-bnext
-endif
+  if buflisted(l:alternateBufNum)
+    buffer #
+  else
+    bnext
+  endif
 
-if bufnr("%") == l:currentBufNum
-new
-endif
-if buflisted(l:currentBufNum)
-execute("bdelete!".l:currentBufNum)
-endif
+  if bufnr("%") == l:currentBufNum
+    new
+  endif
+  if buflisted(l:currentBufNum)
+    execute("bdelete!".l:currentBufNum)
+  endif
 endfunction
 
 
 function! s:align()
   let p = '^\s*|\s.*\s|\s*$'
-    if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
-          let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
-              let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
-                  Tabularize/|/l1
-                      normal! 0
-                          call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
-                            endif
-                          endfunction
+  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+    Tabularize/|/l1
+    normal! 0
+    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+  endif
+endfunction
 
 
 
 " automatic persitent undo across sessions on any file
 if has("persistent_undo")
-set undodir=~/.vim/undodir
-set undofile
+  set undodir=~/.vim/undodir
+  set undofile
 endif
 
 nnoremap <F5> :GundoToggle<CR>
@@ -574,16 +581,16 @@ set statusline=%F%m%r%h%w[%L]%y[%p%%][%04v]
 "              | +-- rodified flag in square brackets
 "              +-- full path to file in the rbuffer
 "}
-              
+
 function! CurDir()
-let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
-return curdir
+  let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
+  return curdir
 endfunction
 
 function! HasPaste()
-if &paste
-  return 'PASTE MODE  '
-else
+  if &paste
+    return 'PASTE MODE  '
+  else
     return ''
   endif
 endfunction
@@ -601,8 +608,8 @@ let Tlist_Ctags_Cmd = 'ctags'
 " Make sure Vim returns to the same line when you reopen a file.
 " Thanks, Amit
 augroup line_return
-    au!
-    au BufReadPost *
+  au!
+  au BufReadPost *
         \ if line("'\"") > 0 && line("'\"") <= line("$") |
         \     execute 'normal! g`"zvzz' |
         \ endif
@@ -610,85 +617,85 @@ augroup END"`'>"'"
 
 "DISABLE ARROW KEYS
 function! DelEmptyLineAbove()
-    if line(".") == 1
-        return
-    endif
-    let l:line = getline(line(".") - 1)
-    if l:line =~ '^\s*$'
-        let l:colsave = col(".")
-        .-1d
-        silent normal! <C-y>
-        call cursor(line("."), l:colsave)
-    endif
+  if line(".") == 1
+    return
+  endif
+  let l:line = getline(line(".") - 1)
+  if l:line =~ '^\s*$'
+    let l:colsave = col(".")
+    .-1d
+    silent normal! <C-y>
+    call cursor(line("."), l:colsave)
+  endif
 endfunction
- 
+
 function! AddEmptyLineAbove()
-    let l:scrolloffsave = &scrolloff
-    " Avoid jerky scrolling with ^E at top of window
-    set scrolloff=0
-    call append(line(".") - 1, "")
-    if winline() != winheight(0)
-        silent normal! <C-e>
-    endif
-    let &scrolloff = l:scrolloffsave
+  let l:scrolloffsave = &scrolloff
+  " Avoid jerky scrolling with ^E at top of window
+  set scrolloff=0
+  call append(line(".") - 1, "")
+  if winline() != winheight(0)
+    silent normal! <C-e>
+  endif
+  let &scrolloff = l:scrolloffsave
 endfunction
- 
+
 function! DelEmptyLineBelow()
-    if line(".") == line("$")
-        return
-    endif
-    let l:line = getline(line(".") + 1)
-    if l:line =~ '^\s*$'
-        let l:colsave = col(".")
-        .+1d
-        ''
-        call cursor(line("."), l:colsave)
-    endif
+  if line(".") == line("$")
+    return
+  endif
+  let l:line = getline(line(".") + 1)
+  if l:line =~ '^\s*$'
+    let l:colsave = col(".")
+    .+1d
+    ''
+    call cursor(line("."), l:colsave)
+  endif
 endfunction
- 
+
 function! AddEmptyLineBelow()
-    call append(line("."), "")
+  call append(line("."), "")
 endfunction
- 
+
 " Arrow key remapping: Up/Dn = move line up/dn; Left/Right = indent/unindent
 function! SetArrowKeysAsTextShifters()
-    " normal mode
-    nmap <silent> <Left> <<
-    nmap <silent> <Right> >>
-    nnoremap <silent> <Up> <Esc>:call DelEmptyLineAbove()<CR>
-    nnoremap <silent> <Down>  <Esc>:call AddEmptyLineAbove()<CR>
-    nnoremap <silent> <C-Up> <Esc>:call DelEmptyLineBelow()<CR>
-    nnoremap <silent> <C-Down> <Esc>:call AddEmptyLineBelow()<CR>
- 
-    " visual mode
-    vmap <silent> <Left> <
-    vmap <silent> <Right> >
-    vnoremap <silent> <Up> <Esc>:call DelEmptyLineAbove()<CR>gv
-    vnoremap <silent> <Down>  <Esc>:call AddEmptyLineAbove()<CR>gv
-    vnoremap <silent> <C-Up> <Esc>:call DelEmptyLineBelow()<CR>gv
-    vnoremap <silent> <C-Down> <Esc>:call AddEmptyLineBelow()<CR>gv
- 
-    " insert mode
-    imap <silent> <Left> <C-D>
-    imap <silent> <Right> <C-T>
-    inoremap <silent> <Up> <Esc>:call DelEmptyLineAbove()<CR>a
-    inoremap <silent> <Down> <Esc>:call AddEmptyLineAbove()<CR>a
-    inoremap <silent> <C-Up> <Esc>:call DelEmptyLineBelow()<CR>a
-    inoremap <silent> <C-Down> <Esc>:call AddEmptyLineBelow()<CR>a
- 
-    " disable modified versions we are not using
-    nnoremap  <S-Up>     <NOP>
-    nnoremap  <S-Down>   <NOP>
-    nnoremap  <S-Left>   <NOP>
-    nnoremap  <S-Right>  <NOP>
-    vnoremap  <S-Up>     <NOP>
-    vnoremap  <S-Down>   <NOP>
-    vnoremap  <S-Left>   <NOP>
-    vnoremap  <S-Right>  <NOP>
-    inoremap  <S-Up>     <NOP>
-    inoremap  <S-Down>   <NOP>
-    inoremap  <S-Left>   <NOP>
-    inoremap  <S-Right>  <NOP>
+  " normal mode
+  nmap <silent> <Left> <<
+  nmap <silent> <Right> >>
+  nnoremap <silent> <Up> <Esc>:call DelEmptyLineAbove()<CR>
+  nnoremap <silent> <Down>  <Esc>:call AddEmptyLineAbove()<CR>
+  nnoremap <silent> <C-Up> <Esc>:call DelEmptyLineBelow()<CR>
+  nnoremap <silent> <C-Down> <Esc>:call AddEmptyLineBelow()<CR>
+
+  " visual mode
+  vmap <silent> <Left> <
+  vmap <silent> <Right> >
+  vnoremap <silent> <Up> <Esc>:call DelEmptyLineAbove()<CR>gv
+  vnoremap <silent> <Down>  <Esc>:call AddEmptyLineAbove()<CR>gv
+  vnoremap <silent> <C-Up> <Esc>:call DelEmptyLineBelow()<CR>gv
+  vnoremap <silent> <C-Down> <Esc>:call AddEmptyLineBelow()<CR>gv
+
+  " insert mode
+  imap <silent> <Left> <C-D>
+  imap <silent> <Right> <C-T>
+  inoremap <silent> <Up> <Esc>:call DelEmptyLineAbove()<CR>a
+  inoremap <silent> <Down> <Esc>:call AddEmptyLineAbove()<CR>a
+  inoremap <silent> <C-Up> <Esc>:call DelEmptyLineBelow()<CR>a
+  inoremap <silent> <C-Down> <Esc>:call AddEmptyLineBelow()<CR>a
+
+  " disable modified versions we are not using
+  nnoremap  <S-Up>     <NOP>
+  nnoremap  <S-Down>   <NOP>
+  nnoremap  <S-Left>   <NOP>
+  nnoremap  <S-Right>  <NOP>
+  vnoremap  <S-Up>     <NOP>
+  vnoremap  <S-Down>   <NOP>
+  vnoremap  <S-Left>   <NOP>
+  vnoremap  <S-Right>  <NOP>
+  inoremap  <S-Up>     <NOP>
+  inoremap  <S-Down>   <NOP>
+  inoremap  <S-Left>   <NOP>
+  inoremap  <S-Right>  <NOP>
 endfunction
- 
+
 call SetArrowKeysAsTextShifters()
