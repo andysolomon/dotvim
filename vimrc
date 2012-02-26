@@ -30,7 +30,7 @@ Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'snipmate-snippets'
 Bundle "garbas/vim-snipmate"
-Bundle 'sjl/gundo'
+" Bundle 'sjl/gundo'
 Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
