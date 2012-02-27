@@ -169,6 +169,13 @@ set virtualedit=all
 nnoremap <leader>v <C-w>v<C-w>l
 
 " Abbreviations ----------------------------------------------------------- {{{
+function! OpenInBrowser(url)
+  if has("mac")
+    exec '!open '.a:url
+  else
+    exec '!firefox -new-tab '.a:url.' &'
+  endif
+endfunction
 
 " Open the Ruby ApiDock page for the word under cursor
 function! OpenRubyDoc(keyword)
