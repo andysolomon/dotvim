@@ -170,6 +170,20 @@ nnoremap <leader>v <C-w>v<C-w>l
 
 " Abbreviations ----------------------------------------------------------- {{{
 
+" Open the Ruby ApiDock page for the word under cursor
+function! OpenRubyDoc(keyword)
+ let url = 'http://apidock.com/ruby/'.a:keyword
+ call OpenInBrowser(url)
+endfunction
+noremap RB :call OpenRubyDoc(expand('<cword>'))<CR>
+
+" Open the Rails ApiDock page for the word under cursor
+function! OpenRailsDoc(keyword)
+  let url = 'http://apidock.com/rails/'.a:keyword
+  call OpenInBrowser(url)
+endfunction
+noremap RR :call OpenRailsDoc(expand('<cword>'))<CR>'
+
 function! EatChar(pat)
   let c = nr2char(getchar(0))
   return (c =~ a:pat) ? '' : c
