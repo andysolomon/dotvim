@@ -1,7 +1,7 @@
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-colorscheme mrkn256
+colorscheme vividchalk
 set background=dark " or dark
 set t_Co=256
 
@@ -71,7 +71,6 @@ noremap <C-h>  <C-w>h
 noremap <C-j>  <C-w>j
 noremap <C-k>  <C-w>k
 noremap <C-l>  <C-w>l
-noremap <leader>v <C-w>v
 
 " Leader
 let mapleader = ","
@@ -126,9 +125,6 @@ set foldmethod=indent
 set foldlevel=99
 set modelines=0
 
-" Always display the status line
-set laststatus=2
-
 " Numbers
 set number
 set numberwidth=5
@@ -157,13 +153,11 @@ set smartindent
 
 set ttyfast
 set showmode
-set showcmd   " Show command in statusline as it's being typed
-set ruler   " Show row,col %progress through file
-set laststatus=0  " Dont't show statusline (2 is always)
 set hidden  " Move between buffers without writing them.  Don't :q! or :qa! frivolously!"
 set backspace=indent,eol,start
 
 set virtualedit=all
+
 
 " Splits  ,v to open a new vertical split and switch to it
 nnoremap <leader>v <C-w>v<C-w>l
@@ -556,6 +550,10 @@ endif
 
 nnoremap <F5> :GundoToggle<CR>
 
+" Reselect visual block after indent/outdent
+vnoremap < <gv
+vnoremap > >gv
+
 " Parenthesis/bracket expanding
 vnoremap $1 <esc>`>a)<esc>`<i(<esc>
 vnoremap $2 <esc>`>a]<esc>`<i[<esc>
@@ -582,26 +580,22 @@ vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 let g:bufExplorerSortBy = "name"
 
 autocmd BufRead,BufNew :call UMiniBufExplorer
-
 map <leader>u :TMiniBufExplorer<cr>
 
+" Replace until end of line with yanked text, uses blackhole register
+nnoremap <silent><Leader>p "_DP
+
 " Format the statusline
-set statusline=%F%m%r%h%w[%L]%y[%p%%][%04v]
-"              | | | | |  |   |      |  |
-"              | | | | |  |   |      |  |
-"              | | | | |  |   |      |  |
-"              | | | | |  |   |      |  |
-"              | | | | |  |   |      |  +-- current % into file
-"              | | | | |  |   |      +-- current syntax in
-"              | | | | |  |   |          square brackets
-"              | | | | |  |   +-- current fileformat
-"              | | | | |  +-- number of lines
-"              | | | | +-- preview flag in square brackets
-"              | | | +-- help flag in square brackets
-"              | | +-- readonly flag in square brackets
-"              | +-- rodified flag in square brackets
-"              +-- full path to file in the rbuffer
-"}
+"set statusline=%F%m%r%h%w[%L]%y[%p%%][%04v]
+"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
+set statusline=%F%m%r%h%w\ [type=%Y]\ [%p%%]\ [len=%L]
+
+function! GuiTabLabel()
+  let bufnrlist = tabpagebuflist(v:lnum)
+  let bufId = bufnrlist[tabpagewinnr(v:lnum) - 1]
+  let fn = bufname(bufId)
+  let lastSlash = strridx(fn, '/')
+endfunction
 
 function! CurDir()
   let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
