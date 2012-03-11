@@ -1,13 +1,13 @@
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-colorscheme vividchalk
-set background=dark " or dark
-set t_Co=256
+  set t_Co=256
+  colorscheme molokai2
+  set background=dark
 
+set cursorline
 set nocompatible
 filetype off  " required!
-
 set rtp+=~/.vim/bundle/vundle/ 
 call vundle#rc()
 
@@ -17,39 +17,36 @@ Bundle 'gmarik/vundle'
 " My Bundles here:
 " "
 " " original repos on github
-" Bundle 'tpope/vim-fugitive'
-" Bundle 'lokaltog/vim-easymotion'
-" Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'tpope/vim-endwise'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-vividchalk'
 Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-repeat'
 Bundle 'flazz/vim-colorschemes'
+Bundle 'nathanaelkane/vim-indent-guides'
 Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'snipmate-snippets'
 Bundle "garbas/vim-snipmate"
-" Bundle 'sjl/gundo'
 Bundle 'Raimondi/delimitMate'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
-" Bundle 'mr-szymanski/prefixr'
 Bundle 'kchmck/vim-coffee-script'
-" Bundle 'fholgado/Molokai2'
+Bundle 'fholgado/Molokai2'
 Bundle 'vim-scripts/YankRing.vim'
 " Bundle 'altercation/vim-colors-solarized'
 Bundle 'tsaleh/vim-matchit'
 Bundle 'groenewege/vim-less'
 Bundle 'mileszs/ack.vim'
-Bundle 'bkad/CamelCaseMotion'
 Bundle 'vim-scripts/ZoomWin'
-" " vim-scripts repos
 Bundle 'L9'
 Bundle 'FuzzyFinder'
 Bundle 'rails.vim'
 " " non github repos
 " Bundle 'git://git.wincent.com/command-t.git'
+
+set smarttab
 
 " Search for the file in all paths 
 :set path=.,~/src/**,/usr/include,,
@@ -115,9 +112,10 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 set wrap
+set nopaste
+set tw=80
 set textwidth=80
 set formatoptions=qrn1
-set nowrap
 set title
 set encoding=utf-8
 set scrolloff=3
@@ -207,8 +205,6 @@ iabbrev lhap ಥ‿ಥ
 iabbrev sl@ steve@stevelosh.com
 iabbrev vrcf `~/.vimrc` file
 
-"  Files, backups and undo
-" " Turn backup off, since most stuff is in SVN, git anyway...
 set nobackup
 set nowb
 set noswapfile
@@ -227,7 +223,8 @@ augroup END
 " Fuzzy Finder {
 " Fuzzy Find file, tree, buffer, line
 nmap <leader>ff :FufFile **/<CR>
-nmap <leader>ft :FufFile<CR>
+
+
 nmap <leader>fb :FufBuffer<CR>
 nmap <leader>fl :FufLine<CR>
 nmap <leader>fr :FufRenewCache<CR>
@@ -241,7 +238,7 @@ let g:html_indent_tags = 'li\|p'
 let g:Powerline_symbols = 'fancy'
 
 " Highlight current line
-" :set cursorline
+set cursorline
 
 " tabs
 map tt :tabnew<CR>
@@ -319,7 +316,6 @@ autocmd FileType html,css set noexpandtab tabstop=2
 
 set lbr
 " set autoindent "Auto indent
-set wrap linebreak nolist
 set formatoptions=qrn1
 
 " When pressing <leader>cd switch to the directory of the open buffer
@@ -714,3 +710,8 @@ function! SetArrowKeysAsTextShifters()
 endfunction
 
 call SetArrowKeysAsTextShifters()
+
+" Slow Vim
+set notimeout
+set ttimeout
+set timeoutlen=50
