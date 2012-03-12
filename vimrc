@@ -1,9 +1,9 @@
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-  set t_Co=256
-  colorscheme molokai2
-  set background=dark
+set t_Co=256
+colorscheme molokai2
+set background=dark
 
 set cursorline
 set nocompatible
@@ -17,32 +17,31 @@ Bundle 'gmarik/vundle'
 " My Bundles here:
 " "
 " " original repos on github
-Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'tpope/vim-endwise'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-vividchalk'
 Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-repeat'
-Bundle 'flazz/vim-colorschemes'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'MarcWeber/vim-addon-mw-utils'
-Bundle 'tomtom/tlib_vim'
-Bundle 'snipmate-snippets'
-Bundle "garbas/vim-snipmate"
-Bundle 'Raimondi/delimitMate'
+Bundle 'vim-scripts/YankRing.vim'
+Bundle 'vim-scripts/ZoomWin'
+Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
-Bundle 'kchmck/vim-coffee-script'
 Bundle 'fholgado/Molokai2'
-Bundle 'vim-scripts/YankRing.vim'
-" Bundle 'altercation/vim-colors-solarized'
-Bundle 'tsaleh/vim-matchit'
-Bundle 'groenewege/vim-less'
 Bundle 'mileszs/ack.vim'
-Bundle 'vim-scripts/ZoomWin'
-Bundle 'L9'
+Bundle 'tsaleh/vim-matchit'
+Bundle 'nathanaelkane/vim-indent-guides'
+Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'Raimondi/delimitMate'
+Bundle 'kchmck/vim-coffee-script'
+Bundle 'groenewege/vim-less'
+Bundle "garbas/vim-snipmate"
+Bundle 'flazz/vim-colorschemes'
 Bundle 'FuzzyFinder'
 Bundle 'rails.vim'
+Bundle 'tomtom/tlib_vim'
+Bundle 'snipmate-snippets'
+Bundle 'L9'
 " " non github repos
 " Bundle 'git://git.wincent.com/command-t.git'
 
