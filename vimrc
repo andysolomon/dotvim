@@ -22,12 +22,12 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-vividchalk'
 Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-repeat'
-Bundle 'vim-scripts/YankRing.vim'
 Bundle 'vim-scripts/ZoomWin'
 Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
 Bundle 'fholgado/Molokai2'
+Bundle 'cldwalker/vimdb'
 Bundle 'mileszs/ack.vim'
 Bundle 'tsaleh/vim-matchit'
 Bundle 'nathanaelkane/vim-indent-guides'
@@ -39,7 +39,6 @@ Bundle "garbas/vim-snipmate"
 Bundle 'flazz/vim-colorschemes'
 Bundle 'FuzzyFinder'
 Bundle 'rails.vim'
-Bundle 'tomtom/tlib_vim'
 Bundle 'snipmate-snippets'
 Bundle 'L9'
 " " non github repos
@@ -577,8 +576,6 @@ let g:bufExplorerSortBy = "name"
 autocmd BufRead,BufNew :call UMiniBufExplorer
 map <leader>u :TMiniBufExplorer<cr>
 
-" Replace until end of line with yanked text, uses blackhole register
-nnoremap <silent><Leader>p "_DP
 
 " Format the statusline
 "set statusline=%F%m%r%h%w[%L]%y[%p%%][%04v]
