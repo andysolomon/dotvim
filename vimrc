@@ -711,3 +711,6 @@ call SetArrowKeysAsTextShifters()
 set notimeout
 set ttimeout
 set timeoutlen=50
+
+" set clipboard to unnamed clipboard
+set clipboard=unnamed
