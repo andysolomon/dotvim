@@ -29,6 +29,7 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'fholgado/Molokai2'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'cldwalker/vimdb'
+Bundle 'benmills/vimux'
 Bundle 'mileszs/ack.vim'
 Bundle 'tsaleh/vim-matchit'
 Bundle 'nathanaelkane/vim-indent-guides'
@@ -53,6 +54,15 @@ Bundle 'git://github.com/tpope/vim-haml'
 " Bundle 'git://git.wincent.com/command-t.git'
 
 set smarttab
+set autoread
+set nowrap
+set linebreak
+
+" ================ Persistent Undo ==================
+" Keep undo history across sessions, by storing in file.
+" Only works all the time.
+set undodir=~/.vim/backups
+set undofile
 
 " Search for the file in all paths 
 :set path=.,~/src/**,/usr/include,,
@@ -117,7 +127,6 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
-set wrap
 set nopaste
 set tw=80
 set textwidth=80
@@ -144,22 +153,18 @@ set showmatch  " Show matching brackets.
 set matchtime=5  " Bracket blinking.
 set novisualbell  " No blinking
 set noerrorbells  " No noise.
-set laststatus=2  " Always show status line.
 set vb t_vb= " disable any beeps or flashes on error
 set ruler  " Show ruler
 set showcmd " Display an incomplete command in the lower right corner of the Vim window
 set shortmess=atI " Shortens messages
-
 set ignorecase      " Don't care about case...
 set smartcase   " ... unless the query contains upper case characters
 set autoindent    " Enable automatic indenting for files with ft set
 set smartindent
-
 set ttyfast
 set showmode
 set hidden  " Move between buffers without writing them.  Don't :q! or :qa! frivolously!"
 set backspace=indent,eol,start
-
 set virtualedit=all
 
 
@@ -175,24 +180,12 @@ function! OpenInBrowser(url)
   endif
 endfunction
 
-" Open the Ruby ApiDock page for the word under cursor
-function! OpenRubyDoc(keyword)
- let url = 'http://apidock.com/ruby/'.a:keyword
- call OpenInBrowser(url)
-endfunction
-noremap RB :call OpenRubyDoc(expand('<cword>'))<CR>
-
 " Open the Rails ApiDock page for the word under cursor
 function! OpenRailsDoc(keyword)
   let url = 'http://apidock.com/rails/'.a:keyword
   call OpenInBrowser(url)
 endfunction
 noremap RR :call OpenRailsDoc(expand('<cword>'))<CR>'
-
-function! EatChar(pat)
-  let c = nr2char(getchar(0))
-  return (c =~ a:pat) ? '' : c
-endfunction
 
 function! MakeSpacelessIabbrev(from, to)
   execute "iabbrev <silent> ".a:from." ".a:to."<C-R>=EatChar('\\s')<CR>"
@@ -207,7 +200,6 @@ call MakeSpacelessIabbrev('gha/', 'http://github.com/andysolomon/')
 iabbrev ldis ಠ_ಠ
 iabbrev lsad ಥ_ಥ
 iabbrev lhap ಥ‿ಥ
-
 iabbrev sl@ steve@stevelosh.com
 iabbrev vrcf `~/.vimrc` file
 
@@ -217,14 +209,6 @@ set noswapfile
 
 " Resize splits when the window is resized
 au VimResized * :wincmd =
-
-" Trailing whitespace {{{
-" " Only shown when not in insert mode so I don't go insane.
-augroup trailing
-  au!
-  au InsertEnter * :set listchars-=trail:⌴
-  au InsertLeave * :set listchars+=trail:⌴
-augroup END
 
 " Fuzzy Finder {
 " Fuzzy Find file, tree, buffer, line
@@ -239,9 +223,6 @@ nmap <leader>fr :FufRenewCache<CR>
 
 " TREAT <LI> AND <P> TAGS LIKE THE BLOCK TAGS THEY ARE
 let g:html_indent_tags = 'li\|p'
-
-" Set fancy stuff for statusline
-let g:Powerline_symbols = 'fancy'
 
 " Highlight current line
 set cursorline
@@ -260,7 +241,7 @@ map <silent> <leader><cr> :noh<cr>
 map <leader>n :NERDTreeToggle<CR>
 let NERDTreeShowBookmarks = 1
 let NERDChristmasTree = 1
-let NERDTreeWinPos = "left"
+let NERDTreeWinPos = "right"
 let NERDTreeHijackNetrw = 1
 let NERDTreeQuitOnOpen = 1
 let NERDTreeWinSize = 50
@@ -299,15 +280,7 @@ set incsearch "Make search act like search in modern browsers
 
 set magic "Set magic on, for regular expressions
 
-set showmatch "Show matching bracets when text indicator is over them
 set mat=2 "How many tenths of a second to blink
-
-if exists(":Tabularize")
-  nmap <Leader>a= :Tabularize /=<CR>
-  vmap <Leader>a= :Tabularize /=<CR>
-  nmap <Leader>a: :Tabularize /:\zs<CR>
-  vmap <Leader>a: :Tabularize /:\zs<CR>
-endif
 
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
 
@@ -321,6 +294,7 @@ autocmd FileType html set formatoptions+=tl
 autocmd FileType html,css set noexpandtab tabstop=2
 
 set lbr
+
 " set autoindent "Auto indent
 set formatoptions=qrn1
 
@@ -331,7 +305,6 @@ map <leader>cd :cd %:p:h<cr>
 " " At Work
 map <leader>p1 :cd /Applications/XAMPP/htdocs/<cr>
 
-command! Bclose call <SID>BufcloseCloseIt()
 
 " CSS and LessCSS {{{
 augroup ft_css
@@ -386,171 +359,11 @@ augroup ft_ruby
   au Filetype ruby setlocal foldmethod=syntax
 augroup END
 
-" Vim {{{
-augroup ft_vim
-  au!
-
-  au FileType vim setlocal foldmethod=marker
-  au FileType help setlocal textwidth=78
-  au BufWinEnter *.txt if &ft == 'help' | wincmd L | endif
-augroup END
-
-" Pulse ------------------------------------------------------------------- {{{
-function! PulseCursorLine()
-  let current_window = winnr()
-
-  windo set nocursorline
-  execute current_window . 'wincmd w'
-
-  setlocal cursorline
-
-  redir => old_hi
-  silent execute 'hi CursorLine'
-  redir END
-  let old_hi = split(old_hi, '\n')[0]
-  let old_hi = substitute(old_hi, 'xxx', '', '')
-
-  hi CursorLine guibg=#2a2a2a
-  redraw
-  sleep 20m
-
-  hi CursorLine guibg=#333333
-  redraw
-  sleep 20m
-
-  hi CursorLine guibg=#3a3a3a
-  redraw
-  sleep 20m
-
-  hi CursorLine guibg=#444444
-  redraw
-  sleep 20m
-
-  hi CursorLine guibg=#4a4a4a
-  redraw
-  sleep 20m
-
-  hi CursorLine guibg=#444444
-  redraw
-  sleep 20m
-
-  hi CursorLine guibg=#3a3a3a
-  redraw
-  sleep 20m
-
-  hi CursorLine guibg=#333333
-  redraw
-  sleep 20m
-
-  hi CursorLine guibg=#2a2a2a
-  redraw
-  sleep 20m
-
-  execute 'hi ' . old_hi
-
-  windo set cursorline
-  execute current_window . 'wincmd w'
-endfunction
-" }}}}
-
-" Rainbox Parentheses {{{
-nnoremap <leader>R :RainbowParenthesesToggle<cr>
-let g:rbpt_colorpairs = [
-      \ ['brown',       'RoyalBlue3'],
-      \ ['Darkblue',    'SeaGreen3'],
-      \ ['darkgray',    'DarkOrchid3'],
-      \ ['darkgreen',   'firebrick3'],
-      \ ['darkcyan',    'RoyalBlue3'],
-      \ ['darkred',     'SeaGreen3'],
-      \ ['darkmagenta', 'DarkOrchid3'],
-      \ ['brown',       'firebrick3'],
-      \ ['gray',        'RoyalBlue3'],
-      \ ['black',       'SeaGreen3'],
-      \ ['darkmagenta', 'DarkOrchid3'],
-      \ ['Darkblue', 'firebrick3'],
-      \ ['darkgreen', 'RoyalBlue3'],
-      \ ['darkcyan', 'SeaGreen3'],
-      \ ['darkred', 'DarkOrchid3'],
-      \ ['red', 'firebrick3'],
-      \ ]
-let g:rbpt_max = 16
-" }}}}
-
-" Block Colors {{{
-let g:blockcolor_state = 0
-function! BlockColor() " {{{
-  if g:blockcolor_state
-    let g:blockcolor_state = 0
-    call matchdelete(77880)
-    call matchdelete(77881)
-    call matchdelete(77882)
-    call matchdelete(77883)
-  else
-    let g:blockcolor_state = 1
-    call matchadd("BlockColor1", '^ \{4}.*', 1, 77880)
-    call matchadd("BlockColor2", '^ \{8}.*', 2, 77881)
-    call matchadd("BlockColor3", '^ \{12}.*', 3, 77882)
-    call matchadd("BlockColor4", '^ \{16}.*', 4, 77883)
-  endif
-endfunction " }}}
-nnoremap <leader>B :call BlockColor()<cr>
-" }}}}
-
-function! MyFoldText() " {{{
-  let line = getline(v:foldstart)
-
-  let nucolwidth = &fdc + &number * &numberwidth
-  let windowwidth = winwidth(0) - nucolwidth - 3
-  let foldedlinecount = v:foldend - v:foldstart
-  " expand tabs into spaces
-  let onetab = strpart('          ', 0, &tabstop)
-  let line = substitute(line, '\t', onetab, 'g')
-
-  let line = strpart(line, 0, windowwidth - 2 -len(foldedlinecount))
-  let fillcharcount = windowwidth - len(line) - len(foldedlinecount)
-  return line . '…' . repeat(" ",fillcharcount) . foldedlinecount . '…' . ' '
-endfunction " }}}
-set foldtext=MyFoldText()}"
-
-function! <SID>BufcloseCloseIt()
-  let l:currentBufNum = bufnr("%")
-  let l:alternateBufNum = bufnr("#")
-
-  if buflisted(l:alternateBufNum)
-    buffer #
-  else
-    bnext
-  endif
-
-  if bufnr("%") == l:currentBufNum
-    new
-  endif
-  if buflisted(l:currentBufNum)
-    execute("bdelete!".l:currentBufNum)
-  endif
-endfunction
-
-
-function! s:align()
-  let p = '^\s*|\s.*\s|\s*$'
-  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
-    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
-    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
-    Tabularize/|/l1
-    normal! 0
-    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
-  endif
-endfunction
-
-
-
 " automatic persitent undo across sessions on any file
 if has("persistent_undo")
   set undodir=~/.vim/undodir
   set undofile
 endif
-
-nnoremap <F5> :GundoToggle<CR>
 
 " Reselect visual block after indent/outdent
 vnoremap < <gv
@@ -572,43 +385,6 @@ inoremap $4 {<esc>o}<esc>O
 inoremap $q ''<esc>i
 inoremap $e ""<esc>i
 inoremap $t <><esc>i
-
-"Move a line of text using ALT+[jk] or Comamnd+[jk] on mac
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-
-let g:bufExplorerSortBy = "name"
-
-autocmd BufRead,BufNew :call UMiniBufExplorer
-map <leader>u :TMiniBufExplorer<cr>
-
-
-" Format the statusline
-"set statusline=%F%m%r%h%w[%L]%y[%p%%][%04v]
-"set statusline=%F%m%r%h%w\ [FORMAT=%{&ff}]\ [TYPE=%Y]\ [ASCII=\%03.3b]\ [HEX=\%02.2B]\ [POS=%04l,%04v][%p%%]\ [LEN=%L]
-set statusline=%F%m%r%h%w\ [type=%Y]\ [%p%%]\ [len=%L]
-
-function! GuiTabLabel()
-  let bufnrlist = tabpagebuflist(v:lnum)
-  let bufId = bufnrlist[tabpagewinnr(v:lnum) - 1]
-  let fn = bufname(bufId)
-  let lastSlash = strridx(fn, '/')
-endfunction
-
-function! CurDir()
-  let curdir = substitute(getcwd(), '/Users/amir/', "~/", "g")
-  return curdir
-endfunction
-
-function! HasPaste()
-  if &paste
-    return 'PASTE MODE  '
-  else
-    return ''
-  endif
-endfunction
 
 "  ---------------------------------------------------------------------------
 "  "  SASS / SCSS
@@ -722,3 +498,28 @@ set timeoutlen=50
 
 " set clipboard to unnamed clipboard
 set clipboard=unnamed
+
+" Pretty colors for fuzzyfinder menus
+highlight Pmenu ctermfg=black ctermbg=gray
+highlight PmenuSel ctermfg=black ctermbg=white
+
+set laststatus=2
+
+"vimux
+" Run the current file with rspec
+map <Leader>rb :call RunVimTmuxCommand("clear; rspec " . bufname("%"))<CR>
+
+" Prompt for a command to run
+map <Leader>rp :PromptVimTmuxCommand<CR>
+
+" Run last command executed by RunVimTmuxCommand
+map <Leader>rl :RunLastVimTmuxCommand<CR>
+
+" Inspect runner pane
+map <Leader>ri :InspectVimTmuxRunner<CR>
+
+" Close all other tmux panes in current window
+map <Leader>rx :CloseVimTmuxPanes<CR>
+
+" Interrupt any command running in the runner pane
+map <Leader>rs :InterruptVimTmuxRunner<CR>)"
