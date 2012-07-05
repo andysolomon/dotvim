@@ -2,7 +2,7 @@ call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
 set t_Co=256
-colorscheme molokai2
+colorscheme Molokai2
 set background=dark
 
 set cursorline
@@ -22,6 +22,11 @@ Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-vividchalk'
 Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-git'
+Bundle 'tpope/vim-haml'
+Bundle 'tpope/vim-ragtag'
+Bundle 'tpope/markdown'
+Bundle 'tpope/ruby'
 Bundle 'vim-scripts/ZoomWin'
 Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'scrooloose/syntastic'
@@ -29,7 +34,6 @@ Bundle 'scrooloose/nerdtree'
 Bundle 'fholgado/Molokai2'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'cldwalker/vimdb'
-Bundle 'benmills/vimux'
 Bundle 'mileszs/ack.vim'
 Bundle 'tsaleh/vim-matchit'
 Bundle 'nathanaelkane/vim-indent-guides'
