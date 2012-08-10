@@ -1,14 +1,8 @@
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
-
-set t_Co=256
-colorscheme Molokai2
-set background=dark
-
 set cursorline
 set nocompatible
+filetype on
 filetype off  " required!
-set rtp+=~/.vim/bundle/vundle/ 
+set rtp+=~/.dotvim/bundle/vundle/ 
 call vundle#rc()
 
 " let Vundle manage Vundle
@@ -26,12 +20,21 @@ Bundle 'tpope/vim-git'
 Bundle 'tpope/vim-haml'
 Bundle 'tpope/vim-ragtag'
 Bundle 'tpope/markdown'
-Bundle 'tpope/ruby'
+Bundle 'tpope/vim-haml'
+Bundle 'tpope/vim-commentary'
+Bundle 'tpope/vim-bundler'
+Bundle 'tpope/vim-abolish'
+Bundle 'tpope/pry-editline'
+Bundle 'tpope/vim-liquid'
+Bundle 'tpope/vim-eunuch'
+Bundle 'tomtom/tcomment_vim'
+Bundle 'aaronjensen/vim-sass-status'
 Bundle 'vim-scripts/ZoomWin'
 Bundle 'vim-scripts/Rainbow-Parenthesis'
 Bundle 'scrooloose/syntastic'
 Bundle 'scrooloose/nerdtree'
 Bundle 'fholgado/Molokai2'
+Bundle 'nelstrom/vim-mac-classic-theme'
 Bundle 'rstacruz/sparkup', {'rtp': 'vim/'}
 Bundle 'cldwalker/vimdb'
 Bundle 'mileszs/ack.vim'
@@ -42,7 +45,13 @@ Bundle 'Raimondi/delimitMate'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'groenewege/vim-less'
 Bundle 'flazz/vim-colorschemes'
+Bundle 'pangloss/vim-javascript'
 Bundle 'Lokaltog/vim-powerline'
+Bundle 'nono/vim-handlebars'
+Bundle 'itspriddle/vim-jquery'
+Bundle 'mutewinter/nginx.vim'
+Bundle 'vim-ruby/vim-ruby'
+Bundle 'ap/vim-css-color'
 Bundle 'FuzzyFinder'
 Bundle 'rails.vim'
 Bundle 'L9'
@@ -54,23 +63,166 @@ Bundle 'Markdown'
 Bundle 'taglist.vim'
 Bundle 'surround.vim'
 Bundle 'git://github.com/pangloss/vim-javascript.git'
-Bundle 'git://github.com/tpope/vim-haml'
 " " non github repos
 " Bundle 'git://git.wincent.com/command-t.git'
 
+:runtime macros/matchit.vim
+
 set smarttab
 set autoread
-set nowrap
 set linebreak
 
 " ================ Persistent Undo ==================
 " Keep undo history across sessions, by storing in file.
 " Only works all the time.
-set undodir=~/.vim/backups
+set nobackup
+set nowb
+set noswapfile
+set undodir=~/.dotvim/backups
 set undofile
+
+syntax on
+set nohidden
+set history=10000
+set number
+set numberwidth=5
+set ruler
+set switchbuf=useopen
+set encoding=utf-8
+
+" Softtabs, 2 spaces
+set nowrap
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
+set list listchars=tab:\ \ ,trail:·
+
+set hlsearch "Highlight search things
+set incsearch "Make search act like search in modern browsers
+set ignorecase      " Don't care about case...
+set smartcase   " ... unless the query contains upper case characters
+nnoremap <leader>i :set incsearch!<CR>
+nnoremap <leader>h :set hlsearch!<CR>
+autocmd InsertEnter * :setlocal nohlsearch
+autocmd InsertLeave * :setlocal hlsearch
+set magic "Set magic on, for regular expressions
+set mat=2 "How many tenths of a second to blink
+
+if has("wildmenu")
+  set wildignore+=*.a,*.o,*.obj,*.exe,*.dll,*.manifest
+  set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.jpeg
+  set wildignore+=.DS_Store,.git,.hg,.svn
+  set wildignore+=*~,*.swp,*.tmp
+  set wildmenu
+  set wildmode=longest,list
+endif
+
+set laststatus=2
+
+set t_Co=256
+let g:CSApprox_attr_map = { 'bold' : 'bold', 'italic' : '', 'sp' : '' }
+let g:CSApprox_eterm = 1
+set colorcolumn=+1
+colorscheme Molokai2
+
+set showcmd " Display an incomplete command in the lower right corner of the Vim window
+set novisualbell  " No blinking
+set noerrorbells  " No noise.
+set vb t_vb= " disable any beeps or flashes on error
+
+set modelines=10
+
+" Ctags path (brew install ctags)
+let Tlist_Ctags_Cmd = 'ctags'
+map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
+map <C-\> :tnext<CR>
+
+" Remember Last location in file
+augroup line_return
+  au!
+  au BufReadPost *
+        \ if line("'\"") > 0 && line("'\"") <= line("$") |
+        \     execute 'normal! g`"zvzz' |
+        \ endif
+augroup END"`'>"'"
+
+" make uses real tabs
+au FileType * set expandtab
+au FileType make set noexpandtab
+
+au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
+au BufNewFile,BufRead *.json set ft=javascript
+au BufNewFile,BufRead *.hamlbars set ft=haml
+au BufNewFile,BufRead *.hamlc set ft=haml
+au BufNewFile,BufRead *.jst.ejs set ft=jst
+
+au FileType * set softtabstop=2 tabstop=2 shiftwidth=2
+
+" Easy buffer navigation
+noremap <C-h>  <C-w>h
+noremap <C-j>  <C-w>j
+noremap <C-k>  <C-w>k
+noremap <C-l>  <C-w>l
+
+set scrolloff=2
+
+set winwidth=84
+set winheight=5
+set winminheight=5
+set winheight=999
+
+" Slow Vim
+set notimeout
+set ttimeout
+set timeoutlen=50
+
+set nopaste
+set tw=80
+set formatoptions=qrn1
+set title
+set foldmethod=indent
+set foldlevel=99
+
+" Numbers
+
+filetype on
+filetype plugin on
+filetype indent on             " Automatically detect file types.
+
+" Visual "{{{
+set showmatch  " Show matching brackets.
+set matchtime=5  " Bracket blinking.
+set shortmess=atI " Shortens messages
+set autoindent    " Enable automatic indenting for files with ft set
+set smartindent
+set ttyfast
+set showmode
+set backspace=indent,eol,start
+set virtualedit=all
+
+set notimeout
+set ttimeout
+set timeoutlen=50
+set notimeout
+set ttimeout
+set timeoutlen=50
+set notimeout
+set ttimeout
+set timeoutlen=50
+set notimeout
+set ttimeout
+set timeoutlen=50
 
 " Search for the file in all paths 
 :set path=.,~/src/**,/usr/include,,
+
+let g:Powerline_symbols = 'fancy'
+let g:Powerline_stl_path_style = 'short'
+call Pl#Theme#RemoveSegment('fugitive:branch')
+call Pl#Theme#RemoveSegment('fileformat')
+call Pl#Theme#RemoveSegment('fileencoding')
+call Pl#Theme#RemoveSegment('scrollpercent')
 
 " Fast saving
 nmap <leader>w :w!<cr>
@@ -81,14 +233,9 @@ map <leader>e :e! ~/.vim_runtime/vimrc<cr>
 nnoremap <leader>ev <C-w><C-v><C-l>:e $MYVIMRC<cr>
 
 " " When vimrc is edited, reload it
-autocmd! bufwritepost vimrc source ~/.vim/vimrc
-autocmd! bufwritepost .vimrc source ~/.vim/vimrc
+autocmd! bufwritepost vimrc source ~/.dotvim/vimrc
+autocmd! bufwritepost .vimrc source ~/.dotvim/vimrc
 
-" Easy buffer navigation
-noremap <C-h>  <C-w>h
-noremap <C-j>  <C-w>j
-noremap <C-k>  <C-w>k
-noremap <C-l>  <C-w>l
 
 " Leader
 let mapleader = ","
@@ -99,23 +246,13 @@ inoremap jj <Esc>
 " hitting d will duplicate whatever's selected directly below
 vmap D y'>p
 
-set colorcolumn=+1
 
 """" Command Line
-set history=1000            " Keep a very long command-line history.
 set wcm=<C-Z>               " Ctrl-Z in a mapping acts like <Tab> on cmdline
 source $VIMRUNTIME/menu.vim " Load menus (this would be done anyway in gvim)
 " <F4> triggers the menus, even in terminal vim.
 
 " Wildmenu
-if has("wildmenu")
-  set wildignore+=*.a,*.o,*.obj,*.exe,*.dll,*.manifest
-  set wildignore+=*.bmp,*.gif,*.ico,*.jpg,*.png,*.jpeg
-  set wildignore+=.DS_Store,.git,.hg,.svn
-  set wildignore+=*~,*.swp,*.tmp
-  set wildmenu
-  set wildmode=longest,list
-endif
 
 " remap Ctrl+X Ctrl+F to Tab for file completion in insertmode
 inoremap <Tab> <C-X><C-F>
@@ -127,63 +264,9 @@ nnoremap k gk
 " Yank from the cursor to the end of the line, to be consistent with C and D.
 noremap Y y$
 
-" Softtabs, 2 spaces
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set expandtab
-set nopaste
-set tw=80
-set textwidth=80
-set formatoptions=qrn1
-set title
-set encoding=utf-8
-set scrolloff=3
-set foldmethod=indent
-set foldlevel=99
-set modelines=0
-
-" Numbers
-set number
-set numberwidth=5
-
-syntax on               " enable syntax
-filetype on
-filetype plugin on
-filetype indent on             " Automatically detect file types.
-" "}}}
-
-" Visual "{{{
-set showmatch  " Show matching brackets.
-set matchtime=5  " Bracket blinking.
-set novisualbell  " No blinking
-set noerrorbells  " No noise.
-set vb t_vb= " disable any beeps or flashes on error
-set ruler  " Show ruler
-set showcmd " Display an incomplete command in the lower right corner of the Vim window
-set shortmess=atI " Shortens messages
-set ignorecase      " Don't care about case...
-set smartcase   " ... unless the query contains upper case characters
-set autoindent    " Enable automatic indenting for files with ft set
-set smartindent
-set ttyfast
-set showmode
-set hidden  " Move between buffers without writing them.  Don't :q! or :qa! frivolously!"
-set backspace=indent,eol,start
-set virtualedit=all
-
 
 " Splits  ,v to open a new vertical split and switch to it
 nnoremap <leader>v <C-w>v<C-w>l
-
-" Abbreviations ----------------------------------------------------------- {{{
-function! OpenInBrowser(url)
-  if has("mac")
-    exec '!open '.a:url
-  else
-    exec '!firefox -new-tab '.a:url.' &'
-  endif
-endfunction
 
 " Open the Rails ApiDock page for the word under cursor
 function! OpenRailsDoc(keyword)
@@ -195,22 +278,16 @@ noremap RR :call OpenRailsDoc(expand('<cword>'))<CR>'
 function! MakeSpacelessIabbrev(from, to)
   execute "iabbrev <silent> ".a:from." ".a:to."<C-R>=EatChar('\\s')<CR>"
 endfunction
+ 
+" Enable syntastic syntax checking
+let g:syntastic_enable_signs=1
+let g:syntastic_quiet_warnings=1
 
-call MakeSpacelessIabbrev('sl/',  'http://stevelosh.com/')
-call MakeSpacelessIabbrev('bb/',  'http://bitbucket.org/')
-call MakeSpacelessIabbrev('bbs/', 'http://bitbucket.org/sjl/')
-call MakeSpacelessIabbrev('gh/',  'http://github.com/')
-call MakeSpacelessIabbrev('gha/', 'http://github.com/andysolomon/')
+" Use Node.js for JavaScript interpretation
+let $JS_CMD='node'
 
-iabbrev ldis ಠ_ಠ
-iabbrev lsad ಥ_ಥ
-iabbrev lhap ಥ‿ಥ
-iabbrev sl@ steve@stevelosh.com
 iabbrev vrcf `~/.vimrc` file
 
-set nobackup
-set nowb
-set noswapfile
 
 " Resize splits when the window is resized
 au VimResized * :wincmd =
@@ -218,13 +295,10 @@ au VimResized * :wincmd =
 " Fuzzy Finder {
 " Fuzzy Find file, tree, buffer, line
 nmap <leader>ff :FufFile **/<CR>
-
-
 nmap <leader>fb :FufBuffer<CR>
 nmap <leader>fl :FufLine<CR>
 nmap <leader>fr :FufRenewCache<CR>
 " }
-
 
 " TREAT <LI> AND <P> TAGS LIKE THE BLOCK TAGS THEY ARE
 let g:html_indent_tags = 'li\|p'
@@ -272,30 +346,11 @@ map <C-H> :bp<cr>
 map H ^
 map L g_
 
-set ignorecase "Ignore case when searching
-
-nnoremap <leader>i :set incsearch!<CR>
-nnoremap <leader>h :set hlsearch!<CR>
-autocmd InsertEnter * :setlocal nohlsearch
-autocmd InsertLeave * :setlocal hlsearch
-
-set hlsearch "Highlight search things
-
-set incsearch "Make search act like search in modern browsers
-
-set magic "Set magic on, for regular expressions
-
-set mat=2 "How many tenths of a second to blink
 
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
 
-" for CSS, also have things in braces indented:
 autocmd FileType css,less set smartindent
-" " for HTML, generally format text, but if a long line has been created
-" " leave it alone when editing:
 autocmd FileType html set formatoptions+=tl
-" " for both CSS and HTML, use genuine tab characters for 
-" " indentation, to make files a few bytes smaller:
 autocmd FileType html,css set noexpandtab tabstop=2
 
 set lbr
@@ -303,46 +358,15 @@ set lbr
 " set autoindent "Auto indent
 set formatoptions=qrn1
 
-" When pressing <leader>cd switch to the directory of the open buffer
-map <leader>cd :cd %:p:h<cr>
-
-" " Custom maps to set working directories quickly
-" " At Work
-map <leader>p1 :cd /Applications/XAMPP/htdocs/<cr>
-
-
 " CSS and LessCSS {{{
 augroup ft_css
   au!
   au BufNewFile,BufRead *.less setlocal filetype=less
-
   au Filetype less,css setlocal foldmethod=marker
   au Filetype less,css setlocal foldmarker={,}
   au Filetype less,css setlocal omnifunc=csscomplete#CompleteCSS
   au Filetype less,css setlocal iskeyword+=-
-
-  " Use <leader>S to sort properties.  Turns this:
-  "
-  "     p {
-  "         width: 200px;
-  "         height: 100px;
-  "         background: red;
-  "
-  "         ...
-  "     }
-  "
-  " into this:
-
-  "     p {
-  "         background: red;
-  "         height: 100px;
-  "         width: 200px;
-  "
-  "         ...
-  "     }
   au BufNewFile,BufRead *.less,*.css nnoremap <buffer> <localleader>S ?{<CR>jV/\v^\s*\}?$<CR>k:sort<CR>:noh<CR>
-  " Make {<cr> insert a pair of brackets in such a way that the cursor is correctly
-  " positioned inside of them AND the following code doesn't get unfolded.
   au BufNewFile,BufRead *.less,*.css inoremap <buffer> {<cr> {}<left><cr><space><space><space><space>.<cr><esc>kA<bs>
 augroup END
 
@@ -366,7 +390,7 @@ augroup END
 
 " automatic persitent undo across sessions on any file
 if has("persistent_undo")
-  set undodir=~/.vim/undodir
+  set undodir=~/.dotvim/undodir
   set undofile
 endif
 
@@ -398,18 +422,7 @@ au BufNewFile,BufReadPost *.scss setl foldmethod=indent
 au BufNewFile,BufReadPost *.sass setl foldmethod=indent
 au BufRead,BufNewFile *.scss set filetype=scss
 
-" Ctags path (brew install ctags)
-let Tlist_Ctags_Cmd = 'ctags'
 
-" Make sure Vim returns to the same line when you reopen a file.
-" Thanks, Amit
-augroup line_return
-  au!
-  au BufReadPost *
-        \ if line("'\"") > 0 && line("'\"") <= line("$") |
-        \     execute 'normal! g`"zvzz' |
-        \ endif
-augroup END"`'>"'"
 
 "DISABLE ARROW KEYS
 function! DelEmptyLineAbove()
@@ -496,10 +509,6 @@ endfunction
 
 call SetArrowKeysAsTextShifters()
 
-" Slow Vim
-set notimeout
-set ttimeout
-set timeoutlen=50
 
 " set clipboard to unnamed clipboard
 set clipboard=unnamed
@@ -508,23 +517,3 @@ set clipboard=unnamed
 highlight Pmenu ctermfg=black ctermbg=gray
 highlight PmenuSel ctermfg=black ctermbg=white
 
-set laststatus=2
-
-"vimux
-" Run the current file with rspec
-map <Leader>rb :call RunVimTmuxCommand("clear; rspec " . bufname("%"))<CR>
-
-" Prompt for a command to run
-map <Leader>rp :PromptVimTmuxCommand<CR>
-
-" Run last command executed by RunVimTmuxCommand
-map <Leader>rl :RunLastVimTmuxCommand<CR>
-
-" Inspect runner pane
-map <Leader>ri :InspectVimTmuxRunner<CR>
-
-" Close all other tmux panes in current window
-map <Leader>rx :CloseVimTmuxPanes<CR>
-
-" Interrupt any command running in the runner pane
-map <Leader>rs :InterruptVimTmuxRunner<CR>)"
