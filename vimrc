@@ -50,6 +50,7 @@ Bundle 'Lokaltog/vim-powerline'
 Bundle 'nono/vim-handlebars'
 Bundle 'itspriddle/vim-jquery'
 Bundle 'mutewinter/nginx.vim'
+Bundle 'wincent/Command-T'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'ap/vim-css-color'
 Bundle 'FuzzyFinder'
@@ -91,7 +92,7 @@ set switchbuf=useopen
 set encoding=utf-8
 
 " Softtabs, 2 spaces
-set nowrap
+set wrap
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
@@ -516,4 +517,3 @@ set clipboard=unnamed
 " Pretty colors for fuzzyfinder menus
 highlight Pmenu ctermfg=black ctermbg=gray
 highlight PmenuSel ctermfg=black ctermbg=white
-
