@@ -347,9 +347,6 @@ map <C-H> :bp<cr>
 map H ^
 map L g_
 
-
-inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
-
 autocmd FileType css,less set smartindent
 autocmd FileType html set formatoptions+=tl
 autocmd FileType html,css set noexpandtab tabstop=2
